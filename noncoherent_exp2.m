@@ -11,6 +11,8 @@ SNR = 15;
 MonteNum = 1000;
 ProbabilityAIC = [];
 ProbabilityMDL = [];
+ProbabilityBIC = [];
+ProbabilityHQ = [];
 
 % Construct X under different SNR
 for array_2 = array_2Minimun:array_2Maximun
@@ -33,6 +35,8 @@ for array_2 = array_2Minimun:array_2Maximun
 
     Right_AIC = 0;
     Right_MDL = 0;
+    Right_BIC = 0;
+    Right_HQ = 0;
 
     for MonteNumTest = 1:MonteNum
 
@@ -74,6 +78,8 @@ for array_2 = array_2Minimun:array_2Maximun
         %MDL
         AIC = [];
         MDL = [];
+        BIC = [];
+        HQ = [];
         for n=0:1:(sensorsNumber - 1)
 
            %likelihood function
@@ -83,8 +89,9 @@ for array_2 = array_2Minimun:array_2Maximun
 
            AIC = [AIC,2*snapshots*(sensorsNumber-n)*log(likelihoodFunction) + 2*n*(2*sensorsNumber-n)];
            MDL = [MDL,snapshots*(sensorsNumber-n)*log(likelihoodFunction) + 0.5*n*log(snapshots)*(2*sensorsNumber-n)];
-    %       AIC = [AIC,snapshots*(sensorsNumber-n)*log(likelihoodFunction) + n*(2*sensorsNumber-n)];
-
+           BIC = [BIC,2*snapshots*(sensorsNumber-n)*log(likelihoodFunction) + n*log(snapshots)*(2*sensorsNumber-n)];
+           HQ = [HQ,snapshots*(sensorsNumber-n)*log(likelihoodFunction) + 0.5*n*log(log(snapshots))*(2*sensorsNumber-n)];
+           
         end
         
         %EGM
@@ -110,12 +117,26 @@ for array_2 = array_2Minimun:array_2Maximun
         n_MDL = find(MDL == MDLmin);
         if n_MDL == 3
             Right_MDL = Right_MDL + 1;
-        end                 
+        end    
+        
+        BICmin = min(BIC);
+        n_BIC = find(BIC == BICmin);
+        if n_BIC == 3
+            Right_BIC = Right_BIC + 1;
+        end  
+        
+        HQmin = min(HQ);
+        n_HQ = find(HQ == HQmin);
+        if n_HQ == 3
+            Right_HQ = Right_HQ + 1;
+        end  
         
     end
     
     ProbabilityAIC = [ProbabilityAIC,(Right_AIC/MonteNum)*100];
     ProbabilityMDL = [ProbabilityMDL,(Right_MDL/MonteNum)*100];
+    ProbabilityBIC = [ProbabilityBIC,(Right_BIC/MonteNum)*100];
+    ProbabilityHQ = [ProbabilityHQ,(Right_HQ/MonteNum)*100];
     
 end
 
@@ -125,6 +146,8 @@ xlabel('Distance between anagles(Degree)');
 ylabel('Detection Probability');
 axis([1,10,0,100]);
 p1 = plot(x,ProbabilityAIC,'b');
-p2 = plot(x,ProbabilityMDL,'r');
-legend([p1 p2],'AIC','MDL');
+p2 = plot(x,ProbabilityMDL,'*r');
+p3 = plot(x,ProbabilityBIC,'g');
+p4 = plot(x,ProbabilityHQ,'k');
+legend([p1 p2 p3 p4],'AIC','MDL','BIC','HQ');
 hold off;
