@@ -1,12 +1,10 @@
 # UST-W17
 Computer simulation of signal source detection
  
-* experiment 1:
+experiment 1:
+* Examing the effectiveness of different algorithms in the case of non-coherent sources under different SNR 
+* These algorithm include: AIC,MDL,BIC,HQ
 
-Examing the effectiveness of different algorithms in the case of non-coherent sources under different SNR 
-These algorithm include: AIC,MDL and EGM
 
-
-* experiment 2:
-
-(TO BE CONTINUE...) 
+experiment 2:
+*　(TO BE CONTINUE...) 
