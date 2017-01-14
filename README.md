@@ -1,4 +1,4 @@
-# UST-W17
+# UST-W17-SSC
 Computer simulation of signal source detection
  
 experiment 1:
